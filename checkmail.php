@@ -6,7 +6,7 @@ class CheckMail
 	private function validate_contents($message)
 	{
 		
-		$find_hash = preg_match("/" . __('Comment-Hash:', 'WF_CommentToReply') . " (.*)/i", $message, $matches);
+		$find_hash = preg_match("/Comment-Hash: (.*)/i", $message, $matches);
 		if ($find_hash == 1) {
 			$hash = trim($matches[1]);
 			
