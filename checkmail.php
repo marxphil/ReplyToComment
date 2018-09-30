@@ -3,21 +3,22 @@
 class CheckMail
 {
 	
+	/**
+	 * Gets the comments hash from incoming mail to enumerate matching post/comment
+	 * @param  string $message mail contents
+	 * @return array/bool          Returns matching comment_id/post_id if hash could be identified, otherwise FALSE
+	 */
 	private function validate_contents($message)
 	{
 		
 		$find_hash = preg_match("/Comment-Hash: (.*)/i", $message, $matches);
 		if ($find_hash == 1) {
 			$hash = trim($matches[1]);
-			
-			// print_r($matches);
-			
+						
 			$comment = get_comments(array(
 				'meta_key' => 'wf_commenthash',
 				'meta_value' => $hash
 			));
-			
-			// print_r($comment);
 			
 			if ($comment != NULL) {
 				$parent_post_id = $comment[0]->comment_post_ID;
@@ -28,9 +29,8 @@ class CheckMail
 					'post_id' => $parent_post_id
 				);
 				
-			} //$comment != NULL
-			
-		} //$find_hash == 1
+			} 
+		}
 		else {
 			return false;
 		}
@@ -92,6 +92,16 @@ class CheckMail
 		return $message;
 	}
 	
+	/**
+	 * Connects to mailbox
+	 * @param string $host     mailserver hostname
+	 * @param string $user     mailserver login user
+	 * @param string $password mailserver login password
+	 * @param string $type     mailserver type (imap, pop3)
+	 * @param int $port     mailserver port
+	 * @param int $is_ssl   defines if ssl should be used
+	 * @return  object imap_handle
+	 */
 	public function MailConnect($host, $user, $password, $type, $port, $is_ssl = '')
 	{
 		$type             = strtolower($type);
@@ -107,10 +117,16 @@ class CheckMail
 		return $mbox;
 	}
 	
+	/**
+	 * Processes mails and parses them
+	 * @param object $mbox handle opened by MailConnect()
+	 */
 	public function ProcessMails($mbox)
 	{
+		// Get Mail Headers
 		$headers = imap_headers($mbox);
 		
+		// If there are some mails
 		if ($headers) {
 			$i = 1;
 			foreach ($headers as $val) {
@@ -123,11 +139,14 @@ class CheckMail
 					$sender_name  = $sender_from[0]->personal;
 					$sender_email = $sender_from[0]->mailbox . '@' . $sender_from[0]->host;
 					
-				} //$imapheader
+				}
 				
 				$mailcontent = imap_qprint(imap_fetchbody($mbox, $i, 1));
 				
+				// Try to get maching comment
 				$validate = $this->validate_contents($mailcontent);
+				
+				// If matching comment is found (validate_contents returns array)
 				if (is_array($validate)) {
 					
 					$commentdata = array(
@@ -139,19 +158,26 @@ class CheckMail
 					);
 					
 					wp_new_comment($commentdata, true);
+					
+					// Delete processed mail
 					imap_delete($mbox, $i);
 					
 					
-				} //is_array($validate)
+				} 
 				else {
+					// Mail not recognized, delete it
+					// Could be improved with notification to admin, that some mails could not processed (imagine a long comment gets deleted because plugin could not parse the mail...)
 					imap_delete($mbox, $i);
-					echo 'Nope!';
 				}
 				$i++;
-			} //$headers as $val
-		} //$headers
+			}
+		}
 	}
 	
+	/**
+	 * Closes IMAP Connection
+	 * @param object $mbox Handle opened by MailConnect() with param EXPRUNGE (delete marked mails)
+	 */
 	public function MailClose($mbox)
 	{
 		imap_close($mbox, CL_EXPUNGE);
@@ -174,4 +200,3 @@ $mbox = $mail->MailConnect($mailserver, $mailuser, $mailpassword, $mailtype, $ma
 $mail->ProcessMails($mbox);
 
 $mail->MailClose($mbox);
-?>
