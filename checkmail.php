@@ -1,7 +1,5 @@
 <?php
 
-include("../../../wp-load.php");
-
 class CheckMail
 {
 	

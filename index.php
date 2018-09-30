@@ -6,7 +6,7 @@
  * Author:      Phil Marx
  * Author URI:  https://www.webfalken.de
  * Version:     0.9
- * Text Domain: wf-replytocomment
+ * Text Domain: reply-to-comment
  * Domain Path: /languages/
  * License:     GPL v2 or later
  */
@@ -80,8 +80,8 @@ function wf_rtc_modify_notification_text($message, $id)
 {
 	$comment = get_comment($id);
 	if (empty($comment->comment_type)) {
-		$message = str_replace(__('You can see all comments on this post here:'), __('You can reply to this comment just by replying to this email.', 'wf-rtc') . "\r\n\r\n" . __('You can see all comments on this post here:'), $message);
-		$message = $message . "\r\n\r\n" . __('Comment-Hash:', 'wf-rtc') . ' ' . wf_rtc_get_commenthash($id);
+		$message = str_replace(__('You can see all comments on this post here:'), __('You can reply to this comment just by replying to this email.', 'reply-to-comment') . "\r\n\r\n" . __('You can see all comments on this post here:'), $message);
+		$message = $message . "\r\n\r\n" . __('Comment-Hash:', 'reply-to-comment') . ' ' . wf_rtc_get_commenthash($id);
 		return $message;
 	} //empty($comment->comment_type)
 }
@@ -109,7 +109,7 @@ function wf_rtc_add_hash($comment_ID, $comment_approved)
 
 function wf_rtc_adminmenu()
 {
-	add_options_page(__('Reply To Comments Settings', 'wf-rtc'), __('Reply To Comments', 'wf-rtc'), 'manage_options', 'wf-rtc', 'wf_rtc_page');
+	add_options_page(__('Reply To Comment Settings', 'reply-to-comment'), __('Reply To Comment', 'reply-to-comment'), 'manage_options', 'reply-to-comment', 'wf_rtc_page');
 }
 
 function wf_rtc_page()
@@ -119,7 +119,7 @@ function wf_rtc_page()
 	} //!current_user_can('manage_options')
 ?>
   <div class="wrap">
-    <h1><?php echo __('Reply To Comments', 'wf-rtc'); ?></h1>
+    <h1><?php echo __('Reply To Comment', 'reply-to-comment'); ?></h1>
   </div>
 
   <form method="post" action="options.php">
@@ -132,59 +132,59 @@ function wf_rtc_page()
         <tr valign="top">
           <th scope="row">
             <?php
-	echo __('Mailbox', 'wf-rtc');
+	echo __('Mailbox', 'reply-to-comment');
 ?>
           </th>
           <td><input type="text" name="wf-rtc-mailbox" value="<?php
 	echo esc_attr(get_option('wf-rtc-mailbox'));
 ?>" /><br /><label for="wf-rtc-mailbox"><?php
-	echo __('Email address WordPress should use for Reply To Comments', 'wf-rtc');
+	echo __('Email address WordPress should use for Reply To Comment', 'reply-to-comment');
 ?></label></td>
         </tr>
 
         <tr valign="top">
           <th scope="row">
             <?php
-	echo __('Server', 'wf-rtc');
+	echo __('Server', 'reply-to-comment');
 ?>
           </th>
           <td><input type="text" name="wf-rtc-server" value="<?php
 	echo esc_attr(get_option('wf-rtc-server'));
 ?>" /><br /><label for="wf-rtc-server"><?php
-	echo __('Server address to this mailbox', 'wf-rtc');
+	echo __('Server address to this mailbox', 'reply-to-comment');
 ?></label></td>
         </tr>
 
         <tr valign="top">
           <th scope="row">
             <?php
-	echo __('Username', 'wf-rtc');
+	echo __('Username', 'reply-to-comment');
 ?>
           </th>
           <td><input type="text" name="wf-rtc-user" value="<?php
 	echo esc_attr(get_option('wf-rtc-user'));
 ?>" /><br /><label for="wf-rtc-user"><?php
-	echo __('Username for this mailbox', 'wf-rtc');
+	echo __('Username for this mailbox', 'reply-to-comment');
 ?></label></td>
         </tr>
 
         <tr valign="top">
           <th scope="row">
             <?php
-	echo __('Password', 'wf-rtc');
+	echo __('Password', 'reply-to-comment');
 ?>
           </th>
           <td><input type="password" name="wf-rtc-password" value="<?php
 	echo esc_attr(get_option('wf-rtc-password'));
 ?>" /><br /><label for="wf-rtc-password"><?php
-	echo __('Password for this mailbox', 'wf-rtc');
+	echo __('Password for this mailbox', 'reply-to-comment');
 ?></label></td>
         </tr>
 
         <tr valign="top">
           <th scope="row">
             <?php
-	echo __('Type', 'wf-rtc');
+	echo __('Type', 'reply-to-comment');
 ?>
           </th>
           <td><select name="wf-rtc-type">
@@ -197,34 +197,34 @@ function wf_rtc_page()
 		echo ' selected="selected"';
 ?>>POP3</option>
           </select><br /><label for="wf-rtc-type"><?php
-	echo __('Which protocol do you want to use to access to mailbox?', 'wf-rtc');
+	echo __('Which protocol do you want to use to access to mailbox?', 'reply-to-comment');
 ?></label></td>
         </tr>
 
         <tr valign="top">
           <th scope="row">
             <?php
-	echo __('Port', 'wf-rtc');
+	echo __('Port', 'reply-to-comment');
 ?>
           </th>
           <td><input type="number" name="wf-rtc-port" value="<?php
 	echo esc_attr(get_option('wf-rtc-port'));
 ?>" /><br /><label for="wf-rtc-port"><?php
-	echo __('Port to mailbox server (IMAP Standard: 143 / POP3 Standard: 110)', 'wf-rtc');
+	echo __('Port to mailbox server (IMAP Standard: 143 / POP3 Standard: 110)', 'reply-to-comment');
 ?></label></td>
         </tr>
 
         <tr valign="top">
           <th scope="row">
             <?php
-	echo __('SSL', 'wf-rtc');
+	echo __('SSL', 'reply-to-comment');
 ?>
           </th>
           <td><input type="checkbox" name="wf-rtc-ssl" value="1" <?php
 	if (esc_attr(get_option('wf-rtc-ssl')) == "1")
 		echo ' checked="checked"';
 ?> /><br /><label for="wf-rtc-ssl"><?php
-	echo __('Is the connection to the server encrypted? Please check, if port has to be changed (IMAP Standard: 993 / POP3 Standard: 995)', 'wf-rtc');
+	echo __('Is the connection to the server encrypted? Please check, if port has to be changed (IMAP Standard: 993 / POP3 Standard: 995)', 'reply-to-comment');
 ?></label></td>
         </tr>
       </table>
