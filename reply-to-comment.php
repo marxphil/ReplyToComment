@@ -344,4 +344,9 @@ add_filter('cron_schedules', 'wf_rtc_schedules');
 add_action('comment_post', 'wf_rtc_add_hash', 10, 2);
 add_action('admin_menu', 'wf_rtc_adminmenu');
 add_action('admin_init', 'wf_rtc_register');
+<<<<<<< HEAD:index.php
 add_action('wf_rtc_checkmail', 'do_wf_rtc_checkmail');
+=======
+add_action('wf_rtc_checkmail', 'do_wf_rtc_checkmail');
+?>
+>>>>>>> a1a923c9b58c4116e6cf5edd948487fbebb55c6b:reply-to-comment.php
